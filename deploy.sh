@@ -37,15 +37,15 @@ function deploy() {
 
   echo
 
-  $TERRAFORM_CMD plan -out=$TMP_DIR/localstack.plan || exit 1
+  $TERRAFORM_CMD plan -out=$TMP_DIR/plan || exit 1
 
   echo
 
-  $TERRAFORM_CMD apply $TMP_DIR/localstack.plan || exit 1
+  $TERRAFORM_CMD apply $TMP_DIR/plan || exit 1
 
   echo
 
-  $LOCALSTACK_CLI_CMD state export localstack.state || exit 1
+  $LOCALSTACK_CLI_CMD state export resources.state || exit 1
 }
 
 # Main function.
