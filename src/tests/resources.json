@@ -1,0 +1,16 @@
+{
+  "resources": {
+    "s3": {
+      "bucket": "my-bucket",
+      "notification": "my-lambda"
+    },
+    "lambda": {
+      "function": "my-lambda",
+      "role": "my-lambda",
+      "policy": "my-lambda-my-dynamodb-table"
+    },
+    "dynamodb": {
+      "table": "my-dynamodb-table"
+    }
+  }
+}
