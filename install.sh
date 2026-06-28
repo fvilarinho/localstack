@@ -73,7 +73,7 @@ function install() {
   echo
   echo -n -e "Checking ${ANSI_BOLD}terraform${ANSI_WHITE} installation: "
 
-loca  if [ -n "$TERRAFORM_CMD" ]; then
+  if [ -n "$TERRAFORM_CMD" ]; then
     echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
   else
     OK=0
