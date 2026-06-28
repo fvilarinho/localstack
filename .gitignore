@@ -1,5 +1,6 @@
 /.idea/
 /.env
+/.venv/
 /iac/.terraform*
 /iac/resources.state*
 /iac/terraform.tfstate*
