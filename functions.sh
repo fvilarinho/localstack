@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Prepare the environment to execute this script.
+# Prepares the environment to execute this script.
 function prepareToExecute() {
   # Loads python3 virtual environment.
   if [ -d .venv ]; then
