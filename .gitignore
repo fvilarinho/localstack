@@ -1,7 +1,7 @@
 /.idea/
 /.env
 /iac/.terraform*
+/iac/resources.state*
 /iac/terraform.tfstate*
-/iac/localstack.state*
 /output.log
 /temp/*
