@@ -15,11 +15,11 @@ function prepareToExecute() {
   AWSLOCAL_CLI_CMD="$(which awslocal)"
   LOCALSTACK_CLI_CMD=$(which localstack)
 
-  ANSI_GREEN="\e[1;32m"
-  ANSI_RED="\e[1;31m"
+  ANSI_GREEN="\033[1;32m"
+  ANSI_RED="\033[1;31m"
   ANSI_YELLOW="\033[93m"
   ANSI_CYAN="\x1b[1;36m"
-  ANSI_WHITE="\e[0m"
+  ANSI_WHITE="\033[0m"
   ANSI_BOLD="\033[97m"
 }
 
