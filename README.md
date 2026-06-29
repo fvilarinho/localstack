@@ -65,7 +65,7 @@ file or export the following variables before starting. Use `.env.template` as a
 ```bash
 LOCALSTACK_IMAGE=localstack/localstack-pro:latest
 LOCALSTACK_AUTH_TOKEN=<your-token>
-DEBUG=1
+LOCALSTACK_DEBUG=1
 ```
 
 ### 2. One-command setup

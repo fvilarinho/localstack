@@ -48,7 +48,6 @@ function install() {
   if [ -z "$AWSLOCAL_CLI_CMD" ]; then
     echo
 
-    $PIP_CMD install awscli || exit 1
     $PIP_CMD install awscli-local || exit 1
 
     source .venv/bin/activate || exit 1
