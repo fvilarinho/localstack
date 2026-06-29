@@ -4,8 +4,9 @@ clean:
 	@chmod +x stop.sh
 	@./stop.sh
 	@rm -rf temp
-	@rm iac/*.*state
-	@rm output.log
+	@rm -f iac/.terraform.lock*
+	@rm -f iac/*.*state*
+	@rm -f output.log
 
 install:
 	@chmod +x install.sh
