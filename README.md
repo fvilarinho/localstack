@@ -1,3 +1,4 @@
+```
 █      ███   ███   ███  █      ████ █████  ███   ███  █   █
 █     █   █ █     █   █ █     █       █   █   █ █     █  █
 █     █   █ █     █████ █      ███    █   █████ █     ███
@@ -5,7 +6,7 @@
 █████  ███   ███  █   █ █████ ████    █   █   █  ███  █   █
 
 ========================== DEMO ===========================
-
+```
 A local AWS development environment using LocalStack and demonstrating an event-driven architecture where S3 object
 operations automatically trigger a Lambda function that records activity in DynamoDB, and an API Gateway endpoint
 that exposes the recorded data via a REST API.
@@ -17,7 +18,7 @@ S3 Bucket (my-bucket)
     │
     │  ObjectCreated / ObjectRemoved events
     ▼
-Lambda Function (my-lambda)          ← Python 3.12
+Lambda Function (my-lambda)
     │
     │  PutItem / DeleteItem
     ▼
@@ -33,7 +34,7 @@ API Gateway (my-api) [stage: v1]
 ```
 
 When a file is uploaded to the S3 bucket, `my-lambda` records its filename (key), timestamp, source IP, and
-ETag (MD5 hash) in DynamoDB. When a file is deleted, the corresponding record is removed. The `my-dynamodb-table`
+Etag (MD5 hash) in DynamoDB. When a file is deleted, the corresponding record is removed. The `my-dynamodb-table`
 Lambda is invoked by API Gateway (`GET /v1/get_items`) and returns all current items from the DynamoDB table.
 
 ## Prerequisites
@@ -58,14 +59,13 @@ For the manual dependencies, please follow the installation instructions for you
 
 ### 1. Configure environment
 
-First, you'll need to create a LocalStack trial account at [LocalStack](https://localstack.cloud/). After that, create
-a `.env` file or export the following variables before starting. Use `.env.template` as a starting point:
+First, you'll need to create a trial account at [LocalStack](https://localstack.cloud/). After that, create a `.env` 
+file or export the following variables before starting. Use `.env.template` as a starting point:
 
 ```bash
 LOCALSTACK_IMAGE=localstack/localstack-pro:latest
 LOCALSTACK_AUTH_TOKEN=<your-token>
 DEBUG=1
-ENFORCE_IAM=1
 ```
 
 ### 2. One-command setup
@@ -137,15 +137,16 @@ Invoked by API Gateway on `GET /v1/get_items`:
 
 - Performs a `Scan` on the DynamoDB table and returns all items as a JSON array
 
-Both functions receive the DynamoDB endpoint via the `ENDPOINT_URL` environment variable, set automatically by Terraform during deployment.
+Both functions receive the DynamoDB endpoint via the `ENDPOINT_URL` environment variable, set automatically by 
+Terraform during deployment.
 
 ## API Gateway
 
 A REST API (`my-api`) is provisioned with a single endpoint:
 
-| Method | Path        | Stage | Backend Lambda        |
-|--------|-------------|-------|-----------------------|
-| GET    | /get_items  | v1    | my-dynamodb-table     |
+| Method | Path        | Stage | Lambda Function   |
+|--------|-------------|-------|-------------------|
+| GET    | /get_items  | v1    | my-dynamodb-table |
 
 The full URL when running locally:
 ```
@@ -157,7 +158,8 @@ http://localhost:4566/restapis/<api-id>/v1/_user_request_/get_items
 A single IAM role (`lambda`) is shared by both Lambda functions and has:
 
 - `AWSLambdaBasicExecutionRole` — basic execution and logging
-- Inline policy `lambda-my-dynamodb-table` — `dynamodb:PutItem`, `dynamodb:DeleteItem`, `dynamodb:Scan` on the DynamoDB table
+- Inline policy `lambda-my-dynamodb-table` — `dynamodb:PutItem`, `dynamodb:DeleteItem`, `dynamodb:Scan` on the 
+DynamoDB table
 - Resource-based permission allowing S3 to invoke `my-lambda`
 - Resource-based permission allowing API Gateway to invoke `my-dynamodb-table`
 
@@ -181,16 +183,6 @@ Unit test cases are defined in `src/tests/units.json` and cover:
 - `put_event` — expects HTTP 200 and a DynamoDB write from `my-lambda`
 - `get_items` — expects HTTP 200 and the previously written item from `my-dynamodb-table`
 - `remove_event` — expects HTTP 200 and a DynamoDB delete from `my-lambda`
-
-## LocalStack Container
-
-The container is defined in `docker-compose.yml` and listens on:
-
-- `localhost:4566` — main LocalStack gateway
-- `localhost:4510–4559` — service-specific ports
-
-All Terraform resources target `localhost.localstack.cloud:4566` by default (configurable via the `endpoint` variable
-in `iac/variables.tf`).
 
 ## Contact
 

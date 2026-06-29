@@ -217,6 +217,8 @@ function validateIntegrationTests() {
       if [ -n "$BUCKET" ]; then
         TEST_FILE="temp/tests/integrationTest.txt"
 
+        echo "This is a test" > "$TEST_FILE"
+
         $AWSLOCAL_CLI_CMD s3 cp "$TEST_FILE" "s3://$BUCKET" > /dev/null
 
         sleep 2

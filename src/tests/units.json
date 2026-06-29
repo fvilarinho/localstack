@@ -25,7 +25,7 @@
       {
         "invokeName": "remove_event",
         "function": "my-lambda",
-        "payload": "{\"Records\": [{\"eventName\": \"ObjectRemoved\", \"eventTime\": \"2026-01-01 00:00:00\", \"requestParameters\": {\"sourceIPAddress\": \"127.0.0.1\"}, \"s3\": {\"object\": {\"key\": \"test.txt\"}}}]}",
+        "payload": "{\"Records\": [{\"eventName\": \"ObjectRemoved\", \"eventTime\": \"2026-01-01 00:00:00\", \"requestParameters\": {\"sourceIPAddress\": \"127.0.0.1\"}, \"s3\": {\"object\": {\"key\": \"unitTest.txt\"}}}]}",
         "expectedStatusCode": 200,
         "expectedBody": "{\"message\": \"Event processed successfully!\"}"
       }

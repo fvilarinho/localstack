@@ -8,6 +8,5 @@ services:
     environment:
       - LOCALSTACK_AUTH_TOKEN="${LOCALSTACK_AUTH_TOKEN}"
       - DEBUG=${DEBUG}
-      - ENFORCE_IAM=${ENFORCE_IAM}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
