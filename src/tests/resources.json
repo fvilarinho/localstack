@@ -1,16 +1,48 @@
 {
   "resources": {
+    "iam": {
+      "role": "lambda",
+      "policy": {
+        "name": "lambda-my-dynamodb-table",
+        "actions": [
+          "PutItem",
+          "DeleteItem",
+          "Scan"
+        ]
+      }
+    },
     "s3": {
       "bucket": "my-bucket",
-      "notification": "my-lambda"
+      "notification": {
+        "lambda": {
+          "function": "my-lambda"
+        },
+        "events": [
+          "ObjectRemoved",
+          "ObjectCreated"
+        ]
+      }
     },
-    "lambda": {
-      "function": "my-lambda",
-      "role": "my-lambda",
-      "policy": "my-lambda-my-dynamodb-table"
-    },
+    "lambda": [
+      {
+        "function": "my-lambda",
+        "role": "lambda"
+      },
+      {
+        "function": "my-dynamodb-table",
+        "role": "lambda"
+      }
+    ],
     "dynamodb": {
       "table": "my-dynamodb-table"
+    },
+    "apigateway": {
+      "name": "my-api",
+      "path": "/get_items",
+      "method": "GET",
+      "lambda": {
+        "function": "my-dynamodb-table"
+      }
     }
   }
 }

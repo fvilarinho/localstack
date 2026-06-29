@@ -33,7 +33,7 @@ resource "aws_lambda_function" "mylambda" {
   ]
 }
 
-data "archive_file" "mydynamodbtable-lambda" {
+data "archive_file" "mydynamodbtable" {
   type        = "zip"
   source_file = "../src/lambda/mydynamodbtable.py"
   output_path = "../temp/mydynamodbtable.zip"
