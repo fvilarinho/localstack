@@ -52,7 +52,7 @@ function deploy() {
 function main() {
   prepareToExecute
   checkDependencies
-  deploy | tee ../output.log
+  deploy
 }
 
-main
+main | tee -a output.log

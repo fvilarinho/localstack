@@ -132,4 +132,4 @@ function main() {
   install
 }
 
-main
+main | tee -a ../output.log
