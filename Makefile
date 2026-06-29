@@ -1,5 +1,9 @@
 all: install start dist check
 
+clean:
+	rm -rf temp
+	rm iac/*.*state
+	rm output.log
 install:
 	@chmod +x install.sh
 	@./install.sh
