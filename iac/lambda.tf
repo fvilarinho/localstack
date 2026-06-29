@@ -2,7 +2,7 @@
 data "archive_file" "mylambda" {
   type        = "zip"
   source_file = "../src/lambda/mylambda.py"
-  output_path = "../temp/mylambda.zip"
+  output_path = "../temp/lambda/mylambda.zip"
 }
 
 # Lambda function definition. It will be triggered when a object was added/removed in the S3 bucket.
@@ -36,7 +36,7 @@ resource "aws_lambda_function" "mylambda" {
 data "archive_file" "mydynamodbtable" {
   type        = "zip"
   source_file = "../src/lambda/mydynamodbtable.py"
-  output_path = "../temp/mydynamodbtable.zip"
+  output_path = "../temp/lambda/mydynamodbtable.zip"
 }
 
 # Lambda function to list DynamoDB items, invoked by API Gateway.

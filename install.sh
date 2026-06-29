@@ -52,6 +52,8 @@ function install() {
     $PIP_CMD install awscli-local || exit 1
 
     source .venv/bin/activate || exit 1
+
+    AWSLOCAL_CLI_CMD=$(which awslocal)
   else
     echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
   fi
@@ -67,9 +69,17 @@ function install() {
     $PIP_CMD install localstack || exit 1
 
     source .venv/bin/activate || exit 1
+
+    LOCALSTACK_CLI_CMD=$(which localstack)
   else
     echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
   fi
+
+  if [ -f .env ]; then
+    source .env
+  fi
+
+  $LOCALSTACK_CLI_CMD auth set-token "$LOCALSTACK_AUTH_TOKEN" > /dev/null
 
   echo
   echo -n -e "Checking ${ANSI_BOLD}terraform${ANSI_WHITE} installation: "

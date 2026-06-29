@@ -1,0 +1,34 @@
+{
+  "tests": {
+    "lambda": [
+      {
+        "invokeName": "invalid_payload",
+        "function": "my-lambda",
+        "payload": "{}",
+        "expectedStatusCode": 500,
+        "expectedBody": "{\"message\": \"Internal server error\"}"
+      },
+      {
+        "invokeName": "put_event",
+        "function": "my-lambda",
+        "payload": "{\"Records\": [{\"eventName\": \"ObjectCreated\", \"eventTime\": \"2026-01-01 00:00:00\", \"requestParameters\": {\"sourceIPAddress\": \"127.0.0.1\"}, \"s3\": {\"object\": {\"key\": \"test.txt\", \"eTag\": \"123456\"}}}]}",
+        "expectedStatusCode": 200,
+        "expectedBody": "{\"message\": \"Event processed successfully!\"}"
+      },
+      {
+        "invokeName": "get_items",
+        "function": "my-dynamodb-table",
+        "payload": "{}",
+        "expectedStatusCode": 200,
+        "expectedBody": "[{\"etag\": \"123456\", \"filename\": \"test.txt\", \"timestamp\": \"2026-01-01 00:00:00\", \"source_ip\": \"127.0.0.1\"}]"
+      },
+      {
+        "invokeName": "remove_event",
+        "function": "my-lambda",
+        "payload": "{\"Records\": [{\"eventName\": \"ObjectRemoved\", \"eventTime\": \"2026-01-01 00:00:00\", \"requestParameters\": {\"sourceIPAddress\": \"127.0.0.1\"}, \"s3\": {\"object\": {\"key\": \"test.txt\"}}}]}",
+        "expectedStatusCode": 200,
+        "expectedBody": "{\"message\": \"Event processed successfully!\"}"
+      }
+    ]
+  }
+}
