@@ -20,10 +20,11 @@ provider "aws" {
 
   # Customize API endpoints.
   endpoints {
-    s3       = "http://s3.${var.endpoint}"
-    iam      = "http://${var.endpoint}"
-    lambda   = "http://${var.endpoint}"
-    dynamodb = "http://${var.endpoint}"
+    s3          = "http://s3.${var.endpoint}"
+    iam         = "http://${var.endpoint}"
+    lambda      = "http://${var.endpoint}"
+    dynamodb    = "http://${var.endpoint}"
+    apigateway  = "http://${var.endpoint}"
   }
 }
 

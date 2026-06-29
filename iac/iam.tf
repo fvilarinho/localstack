@@ -1,6 +1,6 @@
 # Lambda role definition.
-resource "aws_iam_role" "mylambda" {
-  name = "my-lambda"
+resource "aws_iam_role" "lambda" {
+  name = "lambda"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -15,14 +15,14 @@ resource "aws_iam_role" "mylambda" {
 }
 
 # Attaches the default policy to make it executable/observable.
-resource "aws_iam_role_policy_attachment" "mylambda" {
-  role       = aws_iam_role.mylambda.name
+resource "aws_iam_role_policy_attachment" "lambda" {
+  role       = aws_iam_role.lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 
-  depends_on = [ aws_iam_role.mylambda ]
+  depends_on = [ aws_iam_role.lambda ]
 }
 
-# Allows invoke permission from S3.
+# Allows invoke from S3.
 resource "aws_lambda_permission" "mybucket-mylambda" {
   source_arn    = aws_s3_bucket.mybucket.arn
   function_name = aws_lambda_function.mylambda.function_name
@@ -36,10 +36,24 @@ resource "aws_lambda_permission" "mybucket-mylambda" {
   ]
 }
 
-# Allows put/delete actions in DynamoDB table.
-resource "aws_iam_role_policy" "mylambda-mydynamodbtable" {
-  name = "my-lambda-my-dynamodb-table"
-  role = aws_iam_role.mylambda.id
+# Allow API Gateway to invoke the Lambda.
+resource "aws_lambda_permission" "myapi-mydynamodbtable" {
+  source_arn    = "${aws_api_gateway_rest_api.myapi.execution_arn}/*/*"
+  function_name = aws_lambda_function.mydynamodbtable.function_name
+  principal     = "apigateway.amazonaws.com"
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+
+  depends_on = [
+    aws_api_gateway_rest_api.myapi, 
+    aws_lambda_function.mydynamodbtable
+  ]
+}
+
+# Allows put/delete/scan actions in DynamoDB table via Lambda function.
+resource "aws_iam_role_policy" "lambda-mydynamodbtable" {
+  name = "lambda-my-dynamodb-table"
+  role = aws_iam_role.lambda.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -48,7 +62,8 @@ resource "aws_iam_role_policy" "mylambda-mydynamodbtable" {
         Effect = "Allow"
         Action = [
           "dynamodb:PutItem",
-          "dynamodb:DeleteItem"
+          "dynamodb:DeleteItem",
+          "dynamodb:Scan"
         ]
         Resource = aws_dynamodb_table.mydynamodbtable.arn
       }
@@ -57,6 +72,6 @@ resource "aws_iam_role_policy" "mylambda-mydynamodbtable" {
 
   depends_on = [
     aws_dynamodb_table.mydynamodbtable,
-    aws_iam_role.mylambda
+    aws_iam_role.lambda
   ]
 }

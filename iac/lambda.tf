@@ -13,7 +13,7 @@ resource "aws_lambda_function" "mylambda" {
   timeout          = 10
   filename         = data.archive_file.mylambda.output_path
   source_code_hash = data.archive_file.mylambda.output_base64sha256
-  role             = aws_iam_role.mylambda.arn
+  role             = aws_iam_role.lambda.arn
 
   # Pass the API endpoint to the lambda function, required to make API calls using boto3 library.
   environment {
@@ -29,7 +29,39 @@ resource "aws_lambda_function" "mylambda" {
 
   depends_on = [
     data.archive_file.mylambda,
-    aws_iam_role.mylambda,
-    aws_iam_role_policy_attachment.mylambda
+    aws_iam_role.lambda
+  ]
+}
+
+data "archive_file" "mydynamodbtable-lambda" {
+  type        = "zip"
+  source_file = "../src/lambda/mydynamodbtable.py"
+  output_path = "../temp/mydynamodbtable.zip"
+}
+
+# Lambda function to list DynamoDB items, invoked by API Gateway.
+resource "aws_lambda_function" "mydynamodbtable" {
+  function_name    = "my-dynamodb-table"
+  handler          = "mydynamodbtable.handler"
+  runtime          = "python3.12"
+  timeout          = 10
+  filename         = data.archive_file.mydynamodbtable.output_path
+  source_code_hash = data.archive_file.mydynamodbtable.output_base64sha256
+  role             = aws_iam_role.lambda.arn
+
+  environment {
+    variables = {
+      ENDPOINT_URL = "http://${var.endpoint}"
+    }
+  }
+
+  tags = {
+    Name        = "My DynamoDB Table"
+    Environment = var.environment
+  }
+
+  depends_on = [
+    data.archive_file.mydynamodbtable,
+    aws_iam_role.lambda
   ]
 }
