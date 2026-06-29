@@ -23,25 +23,25 @@ function prepareToExecute() {
 
   cd iac || exit 1
 
-  TMP_DIR=../temp
+  TEMP_DIR=../temp/iac
+
+  mkdir -p $TEMP_DIR
 }
 
-# Clean-up temporary files.
-function cleanUp() {
-  rm -rf $TMP_DIR
-}
 
 # Starts the deployment.
 function deploy() {
+  PLAN_FILE="$TEMP_DIR/localstack.plan"
+
   $TERRAFORM_CMD init -migrate-state -upgrade || exit 1
 
   echo
 
-  $TERRAFORM_CMD plan -out=$TMP_DIR/plan || exit 1
+  $TERRAFORM_CMD plan -out=$PLAN_FILE || exit 1
 
   echo
 
-  $TERRAFORM_CMD apply $TMP_DIR/plan || exit 1
+  $TERRAFORM_CMD apply $PLAN_FILE || exit 1
 
   echo
 
@@ -53,7 +53,6 @@ function main() {
   prepareToExecute
   checkDependencies
   deploy | tee ../output.log
-  cleanUp
 }
 
 main

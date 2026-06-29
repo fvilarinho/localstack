@@ -6,6 +6,9 @@ table    = dynamodb.Table("my-dynamodb-table")
 
 def handler(event, context):
     try:
+        print("Received event:")
+        print(json.dumps(event))
+
         # List the items of the table.
         result = table.scan()
 
