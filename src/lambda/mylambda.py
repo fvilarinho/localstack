@@ -14,12 +14,13 @@ def handler(event, context):
         for record in event["Records"]:
             # Fetches the required attributes (event name, time, source IP address, object key/hash).
             event_name = record["eventName"]
-            event_time = record["eventTime"]
-            source_ip  = record["requestParameters"]["sourceIPAddress"]
             filename   = record["s3"]["object"]["key"]
-            etag       = record["s3"]["object"]["eTag"]
 
             if event_name.startswith("ObjectCreated"):
+                event_time = record["eventTime"]
+                source_ip  = record["requestParameters"]["sourceIPAddress"]
+                etag       = record["s3"]["object"]["eTag"]
+
                 table.put_item(Item = {"filename": filename, "timestamp": event_time, "etag": etag, "source_ip": source_ip})
             elif event_name.startswith("ObjectRemoved"):
                 table.delete_item(Key = {"filename": filename})
