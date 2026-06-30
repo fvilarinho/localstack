@@ -27,16 +27,16 @@ jobs:
         with:
           terraform_version: latest
 
-      - name: Install jq
+      - name: Setup JQ
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Make scripts executable
+      - name: Setup permissions
         run: |
           chmod +x *.sh
 
-      - name: Install dependencies
+      - name: Setup dependencies
         run: ./install.sh
 
       - name: Start LocalStack
@@ -51,12 +51,12 @@ jobs:
             done
           '
 
-      - name: Deploy
+      - name: Provision resources
         run: ./deploy.sh
 
-      - name: Validate
+      - name: Validate the provisioned resources
         run: ./validate.sh
 
-      - name: Stop
+      - name: Stop LocalStack and Clean-up
         if: always()
         run: ./stop.sh
