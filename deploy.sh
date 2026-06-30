@@ -3,13 +3,15 @@
 # Checks the dependencies of this script.
 function checkDependencies() {
   if [ -z "$TERRAFORM_CMD" ]; then
-    echo -e "${ANSI_BOLD}terraform${ANSI_WHITE} not detected! Please check your environment or install it first!"
+    echo -e "${ANSI_RED}terraform not detected! Please check your environment or install it first!${ANSI_RESET}"
+    echo
 
     exit 1
   fi
 
   if [ -z "$LOCALSTACK_CLI_CMD" ]; then
-    echo -e "${ANSI_BOLD}localstack cli${ANSI_WHITE} not detected! Please check your environment or install it first!"
+    echo -e "${ANSI_RED}localstack not detected! Please check your environment or install it first!${ANSI_RESET}"
+    echo
 
     exit 1
   fi

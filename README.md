@@ -44,14 +44,14 @@ The following software are required:
 | Name                                                                                                   | Purpose                                                  | Install   |
 |--------------------------------------------------------------------------------------------------------|----------------------------------------------------------|-----------|
 | [Python 3](https://www.python.org/downloads/)                                                          | Programming language used by Lambda functions and CLIs   | Manual    |
-| [Python venv](https://docs.python.org/3/library/venv.html)                                             | Python Virtual Environment                               | Automatic |
-| [Python pip](https://docs.python.org/3/installing/index.html)                                          | Python Package Installer                                 | Automatic |
-| [boto3](https://aws.amazon.com/pt/sdk-for-python/)                                                     | Official AWS SDK for Python used in the Lambda functions | Automatic |
+| [Python VENV](https://docs.python.org/3/library/venv.html)                                             | Python Virtual Environment                               | Automatic |
+| [Python PIP](https://docs.python.org/3/installing/index.html)                                          | Python Package Installer                                 | Automatic |
+| [Boto 3](https://aws.amazon.com/pt/sdk-for-python/)                                                    | Official AWS SDK for Python used in the Lambda functions | Automatic |
+| [AWS Local CLI](https://github.com/localstack/awscli-local)                                            | AWS CLI wired to LocalStack                              | Automatic |
+| [LocalStack CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/localstack-cli/) | LocalStack CLI used to export the resources state        | Automatic |
 | [Docker](https://www.docker.com/)                                                                      | Runs the LocalStack container                            | Manual    |
 | [Terraform](https://developer.hashicorp.com/terraform)                                                 | Provisions AWS resources locally                         | Manual    |
-| [jq](https://jqlang.org/)                                                                              | JSON parsing in validation scripts                       | Manual    |
-| [awscli-local](https://github.com/localstack/awscli-local)                                             | AWS CLI wired to LocalStack                              | Automatic |
-| [localstack cli](https://docs.localstack.cloud/aws/developer-tools/running-localstack/localstack-cli/) | LocalStack CLI used to export the resources state        | Automatic |
+| [JQ](https://jqlang.org/)                                                                              | JSON parsing in validation scripts                       | Manual    |
 
 For the manual dependencies, please follow the installation instructions for your operating system.
 
@@ -130,6 +130,8 @@ Processes S3 event notifications triggered by the bucket:
 
 - **ObjectCreated** → writes `{ filename, timestamp, etag, source_ip }` to DynamoDB via `PutItem`
 - **ObjectRemoved** → deletes the record by `filename` via `DeleteItem`
+
+To upload a file, just put it in the `src/s3` directory. **Remember to update the unit test response!**
 
 ### `src/lambda/mydynamodbtable.py` — DynamoDB query handler
 

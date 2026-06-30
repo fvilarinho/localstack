@@ -3,7 +3,8 @@
 # Checks the dependencies of this script.
 function checkDependencies() {
   if [ -z "$DOCKER_CMD" ]; then
-    echo -e "${ANSI_BOLD}docker${ANSI_WHITE} not detected! Please check your environment or install it first!"
+    echo -e "${ANSI_RED}docker not detected! Please check your environment or install it first!${ANSI_RESET}"
+    echo
 
     exit 1
   fi

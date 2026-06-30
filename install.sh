@@ -10,7 +10,8 @@ function prepareToExecute() {
 # Checks the dependencies of this script.
 function checkDependencies() {
   if [ -z "$PYTHON_CMD" ]; then
-    echo -e "${ANSI_BOLD}python3${ANSI_WHITE} not detected! Please check your environment or install it first!"
+    echo -e "${ANSI_RED}python3 not detected! Please check your environment or install it first!${ANSI_RESET} "
+    echo
 
     exit 1
   fi
@@ -20,107 +21,113 @@ function checkDependencies() {
 function install() {
   OK=1
 
-  echo -n -e "Checking ${ANSI_BOLD}python3${ANSI_WHITE} virtual environment: "
+  echo -n -e "Checking ${ANSI_BOLD}python3${ANSI_RESET} virtual environment: "
 
   if [ ! -d .venv ]; then
-    echo
+    echo -e "${ANSI_YELLOW}not detected, installing...${ANSI_RESET}"
 
     $PYTHON_CMD -m venv .venv || exit 1
+
+    source .venv/bin/activate
+
+    PIP_CMD=$(which pip)
+
+    $PIP_CMD install -r requirements.txt || exit 1
+    $PIP_CMD install --upgrade pip || exit 1
   else
-    echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
+    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
+
+    source .venv/bin/activate || exit 1
   fi
 
-  source .venv/bin/activate || exit 1
-
   echo
-  echo -e "Checking ${ANSI_BOLD}python3${ANSI_WHITE} requirements: "
-
-  PIP_CMD=$(which pip)
-
-  $PIP_CMD install -r requirements.txt || exit 1
-  $PIP_CMD install --upgrade pip || exit 1
-
-  echo
-  echo -n -e "Checking ${ANSI_BOLD}awslocal cli${ANSI_WHITE} installation: "
+  echo -n -e "Checking ${ANSI_BOLD}awslocal cli${ANSI_RESET} installation: "
 
   AWSLOCAL_CLI_CMD=$(which awslocal)
 
   if [ -z "$AWSLOCAL_CLI_CMD" ]; then
-    echo
+    OK=0
 
-    $PIP_CMD install awscli-local || exit 1
-
-    source .venv/bin/activate || exit 1
-
-    AWSLOCAL_CLI_CMD=$(which awslocal)
+    echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
   else
-    echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
+    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
   fi
 
   echo
-  echo -n -e "Checking ${ANSI_BOLD}localstack cli${ANSI_WHITE} installation: "
+  echo -n -e "Checking ${ANSI_BOLD}localstack cli${ANSI_RESET} installation: "
 
   LOCALSTACK_CLI_CMD=$(which localstack)
 
   if [ -z "$LOCALSTACK_CLI_CMD" ]; then
+    OK=0
+
+    echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
+  else
+    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
     echo
+    echo -n -e "Checking ${ANSI_BOLD}.env${ANSI_RESET} file: "
 
-    $PIP_CMD install localstack || exit 1
+    if [ ! -f .env ]; then
+      OK=0
 
-    source .venv/bin/activate || exit 1
+      echo -e "${ANSI_RED}not detected, please create it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
+    else
+      source .env
 
-    LOCALSTACK_CLI_CMD=$(which localstack)
-  else
-    echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
+      if [ -z $LOCALSTACK_AUTH_TOKEN ]; then
+        OK=0
+
+        echo -e "${ANSI_RED}invalid, please review it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
+      else
+        $LOCALSTACK_CLI_CMD auth set-token "$LOCALSTACK_AUTH_TOKEN" > /dev/null
+
+        echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
+      fi
+    fi
   fi
-
-  if [ -f .env ]; then
-    source .env
-  fi
-
-  $LOCALSTACK_CLI_CMD auth set-token "$LOCALSTACK_AUTH_TOKEN" > /dev/null
 
   echo
-  echo -n -e "Checking ${ANSI_BOLD}terraform${ANSI_WHITE} installation: "
+  echo -n -e "Checking ${ANSI_BOLD}terraform${ANSI_RESET} installation: "
 
-  if [ -n "$TERRAFORM_CMD" ]; then
-    echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
-  else
+  if [ -z "$TERRAFORM_CMD" ]; then
     OK=0
 
-    echo -e "${ANSI_RED}NOT FOUND${ANSI_WHITE}"
+    echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
+  else
+    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
   fi
 
   echo
-  echo -n -e "Checking ${ANSI_BOLD}docker${ANSI_WHITE} installation: "
+  echo -n -e "Checking ${ANSI_BOLD}docker${ANSI_RESET} installation: "
 
-  if [ -n "$DOCKER_CMD" ]; then
-    echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
-  else
+  if [ -z "$DOCKER_CMD" ]; then
     OK=0
 
-    echo -e "${ANSI_RED}NOT FOUND${ANSI_WHITE}"
+    echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
+  else
+    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
   fi
 
   echo
-  echo -n -e "Checking ${ANSI_BOLD}jq${ANSI_WHITE} installation: "
+  echo -n -e "Checking ${ANSI_BOLD}jq${ANSI_RESET} installation: "
 
-  if [ -n "$JQ_CMD" ]; then
-    echo -e "${ANSI_GREEN}OK${ANSI_WHITE}"
-  else
+  if [ -z "$JQ_CMD" ]; then
     OK=0
 
-    echo -e "${ANSI_RED}NOT FOUND${ANSI_WHITE}"
+    echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
+  else
+    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
   fi
 
   echo
 
-  if [ $OK == 1 ]; then
-    echo -e "${ANSI_CYAN}Everything looks good! Now you can start localstack!${ANSI_WHITE}"
-  else
-    echo -e "${ANSI_YELLOW}Please check the missing requirements before start localstack!${ANSI_WHITE}"
-
+  if [ $OK == 0 ]; then
+    echo -e "${ANSI_YELLOW}Please check the missing requirements before start localstack!${ANSI_RESET}"
+    echo
     exit 1
+  else
+    echo -e "${ANSI_CYAN}Everything looks good! Now you can start localstack!${ANSI_RESET}"
+    echo
   fi
 }
 

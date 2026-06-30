@@ -3,7 +3,8 @@
 # Checks the dependencies of this script.
 function checkDependencies() {
   if [ -z "$DOCKER_CMD" ]; then
-    echo -e "${ANSI_BOLD}docker${ANSI_WHITE} not detected! Please check your environment or install it first!"
+    echo -e "${ANSI_RED}docker not detected! Please check your environment or install it first!${ANSI_RESET}"
+    echo
 
     exit 1
   fi
@@ -16,7 +17,15 @@ function prepareToExecute() {
   showBanner
 }
 
-# Stops localstack,
+# Clean-up the generated/temporary files.
+function cleanUp() {
+	rm -rf temp
+	rm -f iac/.terraform.lock*
+	rm -f iac/*.*state*
+	rm -f output.log
+}
+
+# Stops localstack.
 function stop() {
   $DOCKER_CMD compose down
 }
@@ -26,6 +35,7 @@ function main() {
   prepareToExecute
   checkDependencies
   stop
+  cleanUp
 }
 
 main | tee -a output.log
