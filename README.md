@@ -55,7 +55,7 @@ The following software are required:
 | [Terraform](https://developer.hashicorp.com/terraform)                                                 | Provisions AWS resources locally                         | Manual    |
 | [JQ](https://jqlang.org/)                                                                              | JSON parsing in validation scripts                       | Manual    |
 
-For the manual dependencies, please follow the installation instructions for your operating system.
+For the manual dependencies, please follow the installation instructions for your operating system. Consider using the latest stable version.
 
 ## Getting Started
 
@@ -267,6 +267,8 @@ After the deployment, it will save the resources state in `iac/resources.state` 
 ### 6. Validation & Tests
 
 `validate.sh` runs automatically as part of `make check` and performs:
+
+Definition of the resources that will be checked are in `src/tests/resources.json` and it will cover:
 
 | Check                  | What it verifies                                                              |
 |------------------------|-------------------------------------------------------------------------------|
