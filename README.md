@@ -26,7 +26,7 @@ DynamoDB Table (my-dynamodb-table)
     ▲
     │  Scan
     │
-Lambda Function (my-dynamodb-table)  ← Python 3.12
+Lambda Function (my-dynamodb-table)
     ▲
     │  GET /get_items
     │
