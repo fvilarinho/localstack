@@ -65,23 +65,26 @@ function install() {
   else
     echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
     echo
-    echo -n -e "Checking ${ANSI_BOLD}.env${ANSI_RESET} file: "
 
-    if [ ! -f .env ]; then
-      OK=0
+    if [ -z $LOCALSTACK_AUTH_TOKEN ]; then
+      echo -n -e "Checking ${ANSI_BOLD}.env${ANSI_RESET} file: "
 
-      echo -e "${ANSI_RED}not detected, please create it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
-    else
-      source .env
-
-      if [ -z $LOCALSTACK_AUTH_TOKEN ]; then
+      if [ ! -f .env ]; then
         OK=0
 
-        echo -e "${ANSI_RED}invalid, please review it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
+        echo -e "${ANSI_RED}not detected, please create it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
       else
-        $LOCALSTACK_CLI_CMD auth set-token "$LOCALSTACK_AUTH_TOKEN" > /dev/null
+        source .env
 
-        echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
+        if [ -z $LOCALSTACK_AUTH_TOKEN ]; then
+          OK=0
+
+          echo -e "${ANSI_RED}invalid, please review it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
+        else
+          $LOCALSTACK_CLI_CMD auth set-token "$LOCALSTACK_AUTH_TOKEN" > /dev/null
+
+          echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
+        fi
       fi
     fi
   fi
@@ -138,4 +141,5 @@ function main() {
   install
 }
 
-main | tee -a ../output.log
+main
+q

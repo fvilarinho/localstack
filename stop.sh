@@ -38,4 +38,4 @@ function main() {
   cleanUp
 }
 
-main | tee -a output.log
+main

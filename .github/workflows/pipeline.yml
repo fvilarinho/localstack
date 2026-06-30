@@ -7,7 +7,6 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-
     env:
       LOCALSTACK_IMAGE: ${{ secrets.LOCALSTACK_IMAGE }}
       LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}

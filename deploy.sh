@@ -57,4 +57,4 @@ function main() {
   deploy
 }
 
-main | tee -a output.log
+main

@@ -29,4 +29,4 @@ function main() {
   start
 }
 
-main | tee -a output.log
+main

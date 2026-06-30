@@ -334,4 +334,4 @@ function main() {
   validateIntegrationTests
 }
 
-main | tee -a output.log
+main
