@@ -47,6 +47,7 @@ function deploy() {
 
   echo
 
+  $LOCALSTACK_CLI_CMD logs > ../output.log || exit 1
   $LOCALSTACK_CLI_CMD state export resources.state || exit 1
 }
 
