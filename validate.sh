@@ -45,12 +45,12 @@ function validateIAM() {
   ACTIONS=$($JQ_CMD -r ".resources.iam.policy.actions" "$RESOURCES_FILE" | $JQ_CMD -r 'join(" ")')
   EXISTS=$($AWSLOCAL_CLI_CMD iam list-role-policies --role-name "$ROLE" | grep "$POLICY")
 
-  if [ -n "EXISTS" ]; then
+  if [ -n "$EXISTS" ]; then
     POLICY_CONTENT=$($AWSLOCAL_CLI_CMD iam get-role-policy --role-name "$ROLE" --policy-name "$POLICY")
 
     for ACTION in $ACTIONS
     do
-      EXISTS=$(echo "$POLICY_CONTENT" | grep $ACTION)
+      EXISTS=$(echo "$POLICY_CONTENT" | grep "$ACTION")
 
       if [ -z "$EXISTS" ]; then
         echo -e "${ANSI_RED}'$ACTION' action not found in '$POLICY' policy!${ANSI_RESET}"
@@ -114,7 +114,7 @@ function validateLambda() {
   for FUNCTION in $FUNCTIONS
   do
     CONTENT=$($AWSLOCAL_CLI_CMD lambda list-functions | $JQ_CMD -r ".Functions[] | select(.FunctionName == \"$FUNCTION\")")
-    EXISTS=$(echo $CONTENT | grep "$FUNCTION")
+    EXISTS=$(echo "$CONTENT" | grep "$FUNCTION")
 
     if [ -z "$EXISTS" ]; then
       echo -e "${ANSI_RED}'$FUNCTION' function not found!${ANSI_RESET}"
@@ -131,7 +131,7 @@ function validateLambda() {
     fi
 
     ROLE=$($JQ_CMD -r ".resources.lambda[] | select(.function == \"$FUNCTION\") | .role" "$RESOURCES_FILE")
-    EXISTS=$(echo $CONTENT | grep "$ROLE" )
+    EXISTS=$(echo "$CONTENT" | grep "$ROLE" )
 
     if [ -z "$EXISTS" ]; then
       echo -e "${ANSI_RED}'$ROLE' role not attached in '$FUNCTION' function!${ANSI_RESET}"
@@ -184,7 +184,7 @@ function validateAPIGateway() {
     exit 1
   fi
 
-  EXISTS=$(echo $EXISTS | $JQ_CMD -r ".resourceMethods.$APIGATEWAY_METHOD")
+  EXISTS=$(echo "$EXISTS" | $JQ_CMD -r ".resourceMethods.$APIGATEWAY_METHOD")
 
   if [ -z "$EXISTS" ]; then
     echo -e "${ANSI_RED}'$APIGATEWAY_METHOD' method not found in '$APIGATEWAY_NAME' API Gateway!${ANSI_RESET}"
@@ -192,7 +192,7 @@ function validateAPIGateway() {
     exit 1
   fi
 
-  EXISTS=$(echo $EXISTS | $JQ_CMD -r ".methodIntegration.uri" | grep "$APIGATEWAY_LAMBDA_FUNCTION")
+  EXISTS=$(echo "$EXISTS" | $JQ_CMD -r ".methodIntegration.uri" | grep "$APIGATEWAY_LAMBDA_FUNCTION")
 
   if [ -z "$EXISTS" ]; then
     echo -e "${ANSI_RED}'$APIGATEWAY_LAMBDA_FUNCTION' function not attached to '$APIGATEWAY_NAME' API Gateway!${ANSI_RESET}"

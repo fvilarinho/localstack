@@ -7,26 +7,30 @@ function prepareToExecute() {
     source .venv/bin/activate
   fi
 
-  # Defines environment variables.
-  TERRAFORM_CMD="$(which terraform)"
-  DOCKER_CMD="$(which docker)"
-  PYTHON_CMD="$(which python3)"
-  JQ_CMD="$(which jq)"
-  AWSLOCAL_CLI_CMD="$(which awslocal)"
-  LOCALSTACK_CLI_CMD=$(which localstack)
+  if [ -f .env ]; then
+    source .env
+  fi
 
-  ANSI_GREEN="\033[1;32m"
-  ANSI_RED="\033[1;31m"
-  ANSI_YELLOW="\033[93m"
-  ANSI_CYAN="\033[1;36m"
-  ANSI_RESET="\033[0m"
-  ANSI_BOLD="\033[1m"
+  # Defines environment variables.
+  export TERRAFORM_CMD="$(which terraform)"
+  export DOCKER_CMD="$(which docker)"
+  export PYTHON_CMD="$(which python3)"
+  export JQ_CMD="$(which jq)"
+  export AWSLOCAL_CLI_CMD="$(which awslocal)"
+  export LOCALSTACK_CLI_CMD=$(which localstack)
+
+  export ANSI_GREEN="\033[1;32m"
+  export ANSI_RED="\033[1;31m"
+  export ANSI_YELLOW="\033[93m"
+  export ANSI_CYAN="\033[1;36m"
+  export ANSI_RESET="\033[0m"
+  export ANSI_BOLD="\033[1m"
 }
 
 # Shows the banner logo/labels.
 function showBanner() {
   # Check if the banner file exists.
-  if [ -n banner.txt ]; then
+  if [ -f banner.txt ]; then
     echo -e "$(cat banner.txt)"
     echo
   fi

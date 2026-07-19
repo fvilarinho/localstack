@@ -51,6 +51,7 @@ The following software are required:
 | [Boto 3](https://aws.amazon.com/pt/sdk-for-python/)                                                    | Official AWS SDK for Python used in the Lambda functions | Automatic |
 | [AWS Local CLI](https://github.com/localstack/awscli-local)                                            | AWS CLI wired to LocalStack                              | Automatic |
 | [LocalStack CLI](https://docs.localstack.cloud/aws/developer-tools/running-localstack/localstack-cli/) | LocalStack CLI used to export the resources state        | Automatic |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)               | AWS CLI (dependency for AWS Local CLI)                   | Manual    |
 | [Docker](https://www.docker.com/)                                                                      | Runs the LocalStack container                            | Manual    |
 | [Terraform](https://developer.hashicorp.com/terraform)                                                 | Provisions AWS resources locally                         | Manual    |
 | [JQ](https://jqlang.org/)                                                                              | JSON parsing in validation scripts                       | Manual    |
@@ -189,7 +190,7 @@ A DynamoDB table (`my-dynamodb-table`) stores metadata about every object curren
 following schema:
 
 | Attribute   | Type                   | Description                            |
-| ----------- | ---------------------- | -------------------------------------- |
+|-------------|------------------------|----------------------------------------|
 | `filename`  | String (Partition Key) | Object key in the S3 bucket            |
 | `timestamp` | String                 | Event timestamp                        |
 | `etag`      | String                 | MD5 hash (ETag) of the uploaded object |
@@ -198,7 +199,7 @@ following schema:
 It supports the following operations:
 
 | Operation    | Trigger                                            |
-| ------------ | -------------------------------------------------- |
+|--------------|----------------------------------------------------|
 | `PutItem`    | S3 ObjectCreated event                             |
 | `DeleteItem` | S3 ObjectRemoved event                             |
 | `Scan`       | API Gateway request via `my-dynamodb-table` Lambda |
@@ -216,7 +217,7 @@ awslocal dynamodb scan --table-name my-dynamodb-table
 A REST API (`my-api`) exposes the DynamoDB contents through a Lambda function.
 
 | Method | Path         | Stage | Lambda Function     |
-| ------ | ------------ | ----- | ------------------- |
+|--------|--------------|-------|---------------------|
 | GET    | `/get_items` | `v1`  | `my-dynamodb-table` |
 
 Retrieve information through am API call:

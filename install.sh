@@ -41,7 +41,7 @@ function install() {
   fi
 
   echo
-  echo -n -e "Checking ${ANSI_BOLD}awslocal cli${ANSI_RESET} installation: "
+  echo -n -e "Checking ${ANSI_BOLD}aws cli${ANSI_RESET} installation: "
 
   AWSLOCAL_CLI_CMD=$(which awslocal)
 
@@ -50,7 +50,15 @@ function install() {
 
     echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
   else
-    echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
+    AWS_CLI_CMD=$(which aws)
+
+    if [ -z "$AWS_CLI_CMD" ]; then
+      OK=0
+
+      echo -e "${ANSI_RED}not detected! Please check your environment or install it first!${ANSI_RESET} "
+    else
+      echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
+    fi
   fi
 
   echo
@@ -66,7 +74,7 @@ function install() {
     echo -e "${ANSI_GREEN}OK${ANSI_RESET}"
     echo
 
-    if [ -z $LOCALSTACK_AUTH_TOKEN ]; then
+    if [ -z "$LOCALSTACK_AUTH_TOKEN" ]; then
       echo -n -e "Checking ${ANSI_BOLD}.env${ANSI_RESET} file: "
 
       if [ ! -f .env ]; then
@@ -76,7 +84,7 @@ function install() {
       else
         source .env
 
-        if [ -z $LOCALSTACK_AUTH_TOKEN ]; then
+        if [ -z "$LOCALSTACK_AUTH_TOKEN" ]; then
           OK=0
 
           echo -e "${ANSI_RED}invalid, please review it first! Don't forget to create your account in LocalStack and update your token in the file!${ANSI_RESET}"
@@ -89,7 +97,6 @@ function install() {
     fi
   fi
 
-  echo
   echo -n -e "Checking ${ANSI_BOLD}terraform${ANSI_RESET} installation: "
 
   if [ -z "$TERRAFORM_CMD" ]; then
